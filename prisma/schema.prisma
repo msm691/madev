@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+  MERCHANT
+}
+
+enum AccountStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // Mot de passe haché avec bcrypt
+  role          Role      @default(STUDENT)
+  accountStatus AccountStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  studentProfile  StudentProfile?
+  merchantProfile MerchantProfile?
+}
+
+model StudentProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName String
+  lastName      String
+  school        String?
+  documentUrl   String?  // Lien vers le document justificatif (carte étudiante, certificat)
+  qrCode        String   @unique @default(uuid()) // Identifiant unique pour générer le QR Code
+  
+  favorites Favorite[]
+  scans     ScanHistory[]
+}
+
+model MerchantProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeName    String
+  description  String?
+  address      String?
+  openingHours String?  // Peut être au format JSON ou texte libre
+  
+  categoryId   String?
+  category     Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  
+  offers       Offer[]
+  scans        ScanHistory[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  
+  merchants   MerchantProfile[]
+}
+
+model Offer {
+  id              String   @id @default(cuid())
+  merchantId      String
+  merchant        MerchantProfile @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  title           String
+  description     String
+  discount        String   // Ex: "10%", "-5€", "1 acheté = 1 offert"
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime?
+
+  favorites       Favorite[]
+  scans           ScanHistory[]
+}
+
+model Favorite {
+  id              String   @id @default(cuid())
+  studentId       String
+  student         StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  offerId         String
+  offer           Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+
+  @@unique([studentId, offerId])
+}
+
+model ScanHistory {
+  id              String   @id @default(cuid())
+  studentId       String
+  student         StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  merchantId      String
+  merchant        MerchantProfile @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  offerId         String?
+  offer           Offer? @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  scannedAt       DateTime @default(now())
+}
