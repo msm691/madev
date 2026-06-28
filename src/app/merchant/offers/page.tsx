@@ -70,7 +70,7 @@ export default async function MerchantOffersPage() {
                     <TableCell colSpan={4} className="text-center py-8 text-slate-500">Aucune offre créée.</TableCell>
                   </TableRow>
                 )}
-                {offers.map(offer => (
+                {offers.map((offer: any) => (
                   <TableRow key={offer.id}>
                     <TableCell className="font-medium">{offer.title}</TableCell>
                     <TableCell className="text-blue-600 font-semibold">{offer.discount}</TableCell>

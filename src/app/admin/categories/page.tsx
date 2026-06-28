@@ -4,7 +4,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createCategory, deleteCategory } from "./actions";
+import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminCategoriesPage() {
   const categories = await prisma.category.findMany({
@@ -55,7 +58,7 @@ export default async function AdminCategoriesPage() {
                     <TableCell colSpan={4} className="text-center py-8 text-zinc-500">Aucune catégorie existante.</TableCell>
                   </TableRow>
                 )}
-                {categories.map(category => (
+                {categories.map((category: any) => (
                   <TableRow key={category.id}>
                     <TableCell className="font-medium">{category.name}</TableCell>
                     <TableCell className="text-zinc-500">{category.description || "-"}</TableCell>

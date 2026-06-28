@@ -1,0 +1,1 @@
+pour clear le cache : docker system prune -f

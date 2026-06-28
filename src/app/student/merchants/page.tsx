@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function MerchantsPage() {
   const merchants = await prisma.merchantProfile.findMany({
     include: {
@@ -18,7 +20,7 @@ export default async function MerchantsPage() {
       <h2 className="text-3xl font-bold tracking-tight text-gray-800">Commerçants & Offres</h2>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {merchants.map((merchant) => (
+        {merchants.map((merchant: any) => (
           <Card key={merchant.id} className="shadow-sm hover:shadow-md transition">
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
@@ -42,7 +44,7 @@ export default async function MerchantsPage() {
                 {merchant.offers.length === 0 ? (
                   <p className="text-sm text-gray-400">Aucune offre active.</p>
                 ) : (
-                  merchant.offers.map(offer => (
+                  merchant.offers.map((offer: any) => (
                     <div key={offer.id} className="bg-blue-50 p-3 rounded-lg border border-blue-100">
                       <span className="font-bold text-blue-700 block mb-1">{offer.discount}</span>
                       <span className="text-blue-900">{offer.title}</span>

@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Clock, ShoppingBag, QrCode } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const [totalStudents, totalMerchants, pendingUsers, totalScans] = await Promise.all([
     prisma.user.count({ where: { role: "STUDENT" } }),

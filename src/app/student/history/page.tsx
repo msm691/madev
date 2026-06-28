@@ -45,7 +45,7 @@ export default async function StudentHistoryPage() {
                   <TableCell colSpan={2} className="text-center py-8 text-gray-500">Aucun passage enregistré.</TableCell>
                 </TableRow>
               )}
-              {scans.map((scan) => (
+              {scans.map((scan: any) => (
                 <TableRow key={scan.id}>
                   <TableCell className="font-medium">
                     {format(new Date(scan.scannedAt), "PPP à HH:mm", { locale: fr })}

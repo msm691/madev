@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { UserActions } from "./UserActions";
+
+export const dynamic = "force-dynamic";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default async function AdminUsersPage() {
@@ -35,7 +37,7 @@ export default async function AdminUsersPage() {
                   <TableCell colSpan={6} className="text-center py-8 text-zinc-500">Aucun utilisateur trouvé.</TableCell>
                 </TableRow>
               )}
-              {users.map((user) => (
+              {users.map((user: any) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.email}</TableCell>
                   <TableCell>
